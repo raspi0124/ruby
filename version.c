@@ -127,6 +127,7 @@ Init_ruby_description(void)
 void
 ruby_show_version(void)
 {
+    puts("Ruppy v16, Based on:");
     puts(rb_dynamic_description);
 
 #ifdef RUBY_LAST_COMMIT_TITLE
