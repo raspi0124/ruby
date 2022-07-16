@@ -21,7 +21,7 @@
 #endif
 
 #define PRINT(type) puts(ruby_##type)
-#define MKSTR(type) rb_obj_freeze(rb_usascii_str_new_static(ruby_##type, sizeof(ruby_##type)-1))
+#define MKSTR(type) rb_obj_freeze(rb_usascii_str_new_static(ruby_##type, sizeof(ruby_##type) - 1))
 #define MKINT(name) INT2FIX(ruby_##name)
 
 const int ruby_api_version[] = {
@@ -30,11 +30,9 @@ const int ruby_api_version[] = {
     RUBY_API_VERSION_TEENY,
 };
 #define RUBY_VERSION \
-    STRINGIZE(RUBY_VERSION_MAJOR) "." \
-    STRINGIZE(RUBY_VERSION_MINOR) "." \
-    STRINGIZE(RUBY_VERSION_TEENY) ""
+    STRINGIZE(RUBY_VERSION_MAJOR) "." STRINGIZE(RUBY_VERSION_MINOR) "." STRINGIZE(RUBY_VERSION_TEENY) ""
 #ifndef RUBY_FULL_REVISION
-# define RUBY_FULL_REVISION RUBY_REVISION
+#define RUBY_FULL_REVISION RUBY_REVISION
 #endif
 const char ruby_version[] = RUBY_VERSION;
 const char ruby_revision[] = RUBY_FULL_REVISION;
@@ -51,10 +49,12 @@ const char ruby_engine[] = "ruby";
 const char *rb_dynamic_description = ruby_description;
 
 /*! Defines platform-depended Ruby-level constants */
-void
-Init_version(void)
+void Init_version(void)
 {
-    enum {ruby_patchlevel = RUBY_PATCHLEVEL};
+    enum
+    {
+        ruby_patchlevel = RUBY_PATCHLEVEL
+    };
     VALUE version;
     VALUE ruby_engine_name;
     /*
@@ -101,20 +101,22 @@ Init_version(void)
 #define MJIT_OPTS_ON 0
 #endif
 
-void
-Init_ruby_description(void)
+void Init_ruby_description(void)
 {
     VALUE description;
 
-    if (MJIT_OPTS_ON) {
+    if (MJIT_OPTS_ON)
+    {
         rb_dynamic_description = ruby_description_with_mjit;
         description = MKSTR(description_with_mjit);
     }
-    else if (rb_yjit_enabled_p()) {
+    else if (rb_yjit_enabled_p())
+    {
         rb_dynamic_description = ruby_description_with_yjit;
         description = MKSTR(description_with_yjit);
     }
-    else {
+    else
+    {
         description = MKSTR(description);
     }
 
@@ -124,8 +126,7 @@ Init_ruby_description(void)
     rb_define_global_const("RUBY_DESCRIPTION", /* MKSTR(description) */ description);
 }
 
-void
-ruby_show_version(void)
+void ruby_show_version(void)
 {
     puts("Ruppy v16, Based on:");
     puts(rb_dynamic_description);
@@ -134,13 +135,13 @@ ruby_show_version(void)
     fputs("last_commit=" RUBY_LAST_COMMIT_TITLE, stdout);
 #endif
 #ifdef HAVE_MALLOC_CONF
-    if (malloc_conf) printf("malloc_conf=%s\n", malloc_conf);
+    if (malloc_conf)
+        printf("malloc_conf=%s\n", malloc_conf);
 #endif
     fflush(stdout);
 }
 
-void
-ruby_show_copyright(void)
+void ruby_show_copyright(void)
 {
     PRINT(copyright);
     fflush(stdout);
